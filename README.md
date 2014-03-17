@@ -1,6 +1,6 @@
 Inda 13 spring
 ============
-Introduktion till datalogi, inda13 hemuppgifter
+Introduktion till datalogi, inda13 hemuppgifter i Go language
 
 
 #AUTHORS:
