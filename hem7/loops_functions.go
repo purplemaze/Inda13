@@ -10,7 +10,7 @@ import (
 )
 
 func Sqrt(x float64) float64 {
-	delta := 0.5
+	delta := 0.001
 	z := 1.0
 	for i := 0; i < 14; i++ {
 		temp := z
