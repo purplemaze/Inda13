@@ -1,4 +1,4 @@
-package hem7
+package main
 
 /*
 Author: Daniel Cserhalmi
@@ -9,21 +9,20 @@ import (
 	"math"
 )
 
-/*
-Like for, the if statement can start with a short statement to execute before the condition.
-Variables declared by the statement are only in scope until the end of the if.
-*/
-func pow(x, n, lim float64) float64 {
-	if v := math.Pow(x, n); v < lim {
-		return v
+func Sqrt(x float64) float64 {
+	delta := 0.5
+	z := 1.0
+	for i := 0; i < 14; i++ {
+		temp := z
+		z = z - (math.Pow(z, 2)-x)/2*z
+		if math.Abs(z-temp) < delta {
+			fmt.Println(i)
+			return math.Abs(z)
+		}
 	}
-	return lim
+	return math.Abs(z)
 }
 
 func main() {
-	fmt.Println(
-		pow(3, 2, 10),
-		pow(3, 3, 20),
-		pow(3, 3, 30),
-	)
+	fmt.Println(Sqrt(4))
 }
