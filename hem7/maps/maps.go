@@ -34,6 +34,5 @@ func WordCount(s string) map[string]int {
 }
 
 func main() {
-	fmt.Println(WordCount("I am learing go!"))
 	wc.Test(WordCount)
 }
