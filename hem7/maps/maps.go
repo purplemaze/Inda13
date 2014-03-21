@@ -9,7 +9,6 @@ Author: Daniel Cserhalmi
 Version 1.0
 */
 import (
-	"fmt"
 	"strings"
 	"tour/wc"
 )
@@ -22,11 +21,11 @@ func WordCount(s string) map[string]int {
 	if words != nil {
 		for _, i := range words {
 			if m[i] != 0 {
-				m[i] ++
+				m[i]++
 			} else {
 				m[i] = 1
 			}
-			
+
 		}
 
 	}
