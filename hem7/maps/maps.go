@@ -25,9 +25,7 @@ func WordCount(s string) map[string]int {
 			} else {
 				m[i] = 1
 			}
-
 		}
-
 	}
 	return m
 }

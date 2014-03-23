@@ -25,7 +25,7 @@ func Sqrt(x float64) float64 {
 }
 
 func main() {
-	const x = 4
+	const x = 2
 	my, gos := Sqrt(x), math.Sqrt(x)
 	fmt.Println("my: ", my, "go's: ", gos, "difference: ", my-gos)
 
