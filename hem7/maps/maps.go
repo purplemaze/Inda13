@@ -10,7 +10,7 @@ Version 1.0
 */
 import (
 	"strings"
-	"tour/wc"
+	"code.google.com/p/go-tour/wc"
 )
 
 var m map[string]int
