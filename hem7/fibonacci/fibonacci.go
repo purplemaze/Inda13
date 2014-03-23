@@ -4,6 +4,9 @@ package main
 Exercise: Fibonacci closure
 Let's have some fun with functions.
 Implement a fibonacci function that returns a function (a closure) that returns successive fibonacci numbers.
+
+Author: Daniel Cserhalmi
+Version 1.0
 */
 
 import "fmt"
