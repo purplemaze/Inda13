@@ -1,4 +1,4 @@
-//Äta-jobba-sovklocka 
+//Äta-jobba-sovklocka
 package main
 
 import (
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-//konstaten hour är satt till time.Second för att enklare testa programmet, det ska egentligen vara time.Hour. 
+//konstaten hour är satt till time.Second för att enklare testa programmet, det ska egentligen vara time.Hour.
 //Även layout är satt till "XX:XX:XX"
 const hour, layout, eat, work, sleep = time.Second, "15:04:05", 3 * hour, 8 * hour, 24 * hour
 
@@ -14,33 +14,18 @@ const hour, layout, eat, work, sleep = time.Second, "15:04:05", 3 * hour, 8 * ho
 //var 3:e timme: "Klockan är XX.XX: Dags att äta",
 //var 8:e timme: "Klockan är XX.XX: Dags att arbeta",
 //var 24:e timme:"Klockan är XX.XX: Dags att sova".
-//
-func Remind() {
-	go func() {
-		for { // infinite loop
-			time.Sleep(eat)
-			t := time.Now()
-			fmt.Println("Klockan är", t.Format(layout), ": ", "Dags att äta")
-		}
-	}()
-	go func() {
-		for { // infinite loop
-			time.Sleep(work)
-			t := time.Now()
-			fmt.Println("Klockan är", t.Format(layout), ": ", "Dags att arbeta")
-		}
-	}()
-	go func() {
-		for { // infinite loop
-			time.Sleep(sleep)
-			t := time.Now()
-			fmt.Println("Klockan är", t.Format(layout), ": ", "Dags att sova")
-		}
-	}()
-
+func Remind(layout string, x time.Duration, text string) {
+	for { // infinite loop
+		time.Sleep(x)
+		t := time.Now()
+		fmt.Println("Klockan är", t.Format(layout), ": ", text)
+	}
 }
 
 func main() {
-	Remind()
+	s := "Dags att "
+	go Remind(layout, eat, s+"äta")
+	go Remind(layout, work, s+"jobba")
+	go Remind(layout, sleep, s+"sova")
 	select {}
 }
