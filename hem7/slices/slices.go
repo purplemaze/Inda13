@@ -15,18 +15,18 @@ Version 1.0
 import "tour/pic"
 
 func Pic(dx, dy int) [][]uint8 {
-	p := make([][]uint8, dy)
-	for i := range p {
-		p[i] = make([]uint8, dx)
+	sliceY := make([][]uint8, dy) // dy = length of slice
+	for i := range sliceY {
+		sliceY[i] = make([]uint8, dx) //dx = length of slice
 	}
 
-	for y, row := range p {
-		for x := range row {
-			row[x] = uint8(x * y)
+	for y, sliceX := range sliceY {
+		for x := range sliceX {
+			sliceX[x] = uint8(x ^ y)
 		}
 	}
 
-	return p
+	return sliceY
 }
 
 func main() {
