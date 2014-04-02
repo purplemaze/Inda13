@@ -31,8 +31,8 @@ func main() {
 	for i := 0; i < consumers; i++ {
 		go Consume("c"+strconv.Itoa(i), ch, wgpc)
 	}
-	wgp.Wait() // Wait for all producers to finish.
-	close(ch)	// Production is complete, closing the channel
+	wgp.Wait()  // Wait for all producers to finish.
+	close(ch)   // Production is complete, closing the channel
 	wgpc.Wait() // Wait for all consumers to finish.
 	fmt.Println("time:", time.Now().Sub(before))
 }
@@ -60,5 +60,3 @@ func Consume(id string, ch <-chan string, wg *sync.WaitGroup) {
 func RandomSleep(n int) {
 	time.Sleep(time.Duration(rand.Intn(n)) * time.Millisecond)
 }
-
-
