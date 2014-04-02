@@ -63,19 +63,6 @@ func answerBuffer(questions <-chan string, answers chan string) {
 	}
 }
 
-//Fills the map answerMap with answers
-func fillAnswers() {
-	answerMap["color"] = "The color you percive is not of importance.. "
-	answerMap["how"] = "How do people do anything?"
-	answerMap["god"] = "God is, even though the whole world deny him. Truth stands, even if there be no public support. It is self-sustained."
-	answerMap["hello"] = "Don't waste my time with "
-	answerMap["help"] = "I can't help you with that.."
-	answerMap["art"] = "Art for art’s sake makes no more sense than gin for gin’s sake"
-	answerMap["should"] = "The desires of our ego are often in conflict with the emotions of our heart.  You’ll always have what you want, if you want what you have"
-	answerMap["death"] = "We so easily lose perspective on what takes up our energy and focus.  We’re all dying.  Sometimes we need to remind ourselves of this to enjoy living."
-	answerMap["meaning"] = "42, the number 42 is the answer to The Ultimate Question of Life, the Universe, and Everything"
-}
-
 //This is the oracle's answer algorithm.
 //It waits for a while and then sends and answer on the answer channel
 func answer(question string, answers chan<- string) {
@@ -126,6 +113,19 @@ func prophecy(question string, answer chan<- string) {
 		}
 		answer <- "... " + nonsense[rand.Intn(len(nonsense))]
 	}
+}
+
+//Fills the map answerMap with answers
+func fillAnswers() {
+	answerMap["color"] = "The color you percive is not of importance.. "
+	answerMap["how"] = "How do people do anything?"
+	answerMap["god"] = "God is, even though the whole world deny him. Truth stands, even if there be no public support. It is self-sustained."
+	answerMap["hello"] = "Don't waste my time with "
+	answerMap["help"] = "I can't help you with that.."
+	answerMap["art"] = "Art for art’s sake makes no more sense than gin for gin’s sake"
+	answerMap["should"] = "The desires of our ego are often in conflict with the emotions of our heart.  You’ll always have what you want, if you want what you have"
+	answerMap["death"] = "We so easily lose perspective on what takes up our energy and focus.  We’re all dying.  Sometimes we need to remind ourselves of this to enjoy living."
+	answerMap["meaning"] = "42, the number 42 is the answer to The Ultimate Question of Life, the Universe, and Everything"
 }
 
 func init() { // Functions called "init" are executed before the main function.
