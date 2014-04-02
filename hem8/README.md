@@ -1,0 +1,1 @@
+I uppgifterna bug1.go och bug2.go har jag föklarat varför det inte fungerar i koden.
