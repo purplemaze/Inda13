@@ -4,9 +4,9 @@
 /*
  Filen oracle.go innehåller ett kodskelett till ett orakelprogram som besvarar frågor.
 
-    Gör klart Oracle-metoden. Du får inte ändra i main-metoden och du får inte heller ändra metodsignaturerna. 
-    Observera att svaren inte ska komma direkt, utan med fördröjning. 
-    Glöm inte heller att oraklet ska skriva ut meddelanden även om det inte kommer några frågor. 
+    Gör klart Oracle-metoden. Du får inte ändra i main-metoden och du får inte heller ändra metodsignaturerna.
+    Observera att svaren inte ska komma direkt, utan med fördröjning.
+    Glöm inte heller att oraklet ska skriva ut meddelanden även om det inte kommer några frågor.
     Du får gärna dela upp din lösning på flera metoder.
 
 Ditt program ska innehålla två stycken kanaler: en kanal för frågor samt en kanal för svar och förutsägelser.
@@ -16,7 +16,7 @@ Ditt program ska innehålla två stycken kanaler: en kanal för frågor samt en 
     En gorutin som genererar förutsägelser.
     En gorutin som tar emot alla svar och förutsägelser och skriver ut dem på stdout.
 
-Oracle-metoden är den viktigaste delen av uppgiften. Om du vill får du också förbättra svarsalgoritmen. 
+Oracle-metoden är den viktigaste delen av uppgiften. Om du vill får du också förbättra svarsalgoritmen.
 Även här får gärna dela upp algoritmen på flera metoder. Här är några tips:
 
     Paketen strings och regexp kan vara användbara.
@@ -65,10 +65,40 @@ func main() {
 // The oracle also prints sporadic prophecies to stdout even without being asked.
 func Oracle() chan<- string {
 	questions := make(chan string)
-	// TODO: Answer questions.
-	// TODO: Make prophecies.
-	// TODO: Print answers.
+	answers := make(chan string)
+	go answerBuffer(questions, answers)
+	go print(answers)
+	go prophecy("", answers)
 	return questions
+}
+
+//This is the answer buffer function
+func answerBuffer(questions <-chan string, answers chan string) {
+	for s := range questions {
+		go answer(s, answers)
+	}
+}
+
+//dummy func, fix it
+func answer(question string, answers chan<- string) {
+	time.Sleep(time.Duration(1+rand.Intn(3)) * time.Second)
+	//todo fix the answering algorithm
+	words := strings.Fields(question)
+
+	answers <- words[rand.Intn(len(words))]
+
+}
+
+//This is the print function, it prints one character in a time to simulate a real person
+func print(ch <-chan string) {
+	for s := range ch {
+		for _, s := range strings.Split(s, "") {
+			time.Sleep(time.Duration(50+rand.Intn(150)) * time.Millisecond)
+			fmt.Print(s)
+		}
+		fmt.Println("")
+		fmt.Print(prompt)
+	}
 }
 
 // This is the oracle's secret algorithm.
@@ -77,23 +107,25 @@ func Oracle() chan<- string {
 func prophecy(question string, answer chan<- string) {
 	// Keep them waiting. Pythia, the original oracle at Delphi,
 	// only gave prophecies on the seventh day of each month.
-	time.Sleep(time.Duration(20+rand.Intn(10)) * time.Second)
+	for {
+		time.Sleep(time.Duration(20+rand.Intn(10)) * time.Second)
 
-	// Find the longest word.
-	longestWord := ""
-	words := strings.Fields(question) // Fields extracts the words into a slice.
-	for _, w := range words {
-		if len(w) > len(longestWord) {
-			longestWord = w
+		// Find the longest word.
+		longestWord := ""
+		words := strings.Fields(question) // Fields extracts the words into a slice.
+		for _, w := range words {
+			if len(w) > len(longestWord) {
+				longestWord = w
+			}
 		}
-	}
 
-	// Cook up some pointless nonsense.
-	nonsense := []string{
-		"The moon is dark.",
-		"The sun is bright.",
+		// Cook up some pointless nonsense.
+		nonsense := []string{
+			"The moon is dark.",
+			"The sun is bright.",
+		}
+		answer <- longestWord + "... " + nonsense[rand.Intn(len(nonsense))]
 	}
-	answer <- longestWord + "... " + nonsense[rand.Intn(len(nonsense))]
 }
 
 func init() { // Functions called "init" are executed before the main function.
