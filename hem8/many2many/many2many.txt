@@ -1,0 +1,27 @@
+
+ Programmet many2many.go innehåller 4 producenter som tillsammans skickar 32 strängar över en kanal;
+ i andra änden av kanalen finns 2 konsumenter som tar emot de 32 strängarna. 
+ Förklara vad som händer och varför det händer om man gör följande ändringar i programmet. 
+ Prova att först tänka ut vad som händer och testa sedan din hypotes genom att ändra och köra programmet.
+
+    Vad händer om man byter plats på satserna wgp.Wait() och close(ch) i slutet av main-funktionen?
+		Då kommer man att få exception eller panic som det heter eftersom programmet försöker skicka på en stängd kanal
+
+    Vad händer om man flyttar close(ch) från main-funktionen och i stället stänger kanalen i slutet av funktionen Produce?
+    	Då kommer man troligtvis få panic alltså ett exception eftersom så fort en Produce-gorutin är klar kommer den stänga 
+    	kanalen som alla andra gorutiner använder.
+
+    Vad händer om man tar bort satsen close(ch) helt och hållet?
+		Eftersom ingen gorutin skickar eller försöker ta emot data så kommer det inte pverka programmet 
+		om vi tar bort close(ch) efter wgp.Wait()
+
+    Vad händer om man ökar antalet konsumenter från 2 till 4?
+    	Det borde fungera lika bra som innan, alltså att det inte är säkert att allt hinner konsumeras.
+    	Det blir i det här fallet istället fler som konsumerar det som produceras
+		
+    Kan man vara säker på att alla strängar blir utskrivna innan programmet stannar?
+    Nej det kan man inte eftersom alla gorutiner har en RandomSleep och teoretiskt kan producenterna hinna färdigt innan konsumenterna hunnit konsumera.
+    
+
+Ändra koden genom att lägga till en ny WaitGroup som väntar tills alla konsumenter blivit klara. 
+Lämna in koden för det modifierade programmet. Glöm inte "go fmt". 
