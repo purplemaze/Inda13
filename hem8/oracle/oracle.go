@@ -1,29 +1,6 @@
 // Stefan Nilsson 2013-03-13
 // Daniel Cserhalmi 2014-03-28
 // This program implements an ELIZA-like oracle (en.wikipedia.org/wiki/ELIZA).
-/*
- Filen oracle.go innehåller ett kodskelett till ett orakelprogram som besvarar frågor.
-
-    Gör klart Oracle-metoden. Du får inte ändra i main-metoden och du får inte heller ändra metodsignaturerna.
-    Observera att svaren inte ska komma direkt, utan med fördröjning.
-    Glöm inte heller att oraklet ska skriva ut meddelanden även om det inte kommer några frågor.
-    Du får gärna dela upp din lösning på flera metoder.
-
-Ditt program ska innehålla två stycken kanaler: en kanal för frågor samt en kanal för svar och förutsägelser.
- I Oracle-metoden ska du starta tre stycken permanenta gorutiner:
-
-    En gorutin som tar emot alla frågor och för varje inkommande fråga skapar en separat gorutin som besvarar frågan.
-    En gorutin som genererar förutsägelser.
-    En gorutin som tar emot alla svar och förutsägelser och skriver ut dem på stdout.
-
-Oracle-metoden är den viktigaste delen av uppgiften. Om du vill får du också förbättra svarsalgoritmen.
-Även här får gärna dela upp algoritmen på flera metoder. Här är några tips:
-
-    Paketen strings och regexp kan vara användbara.
-    Programmet kan verka mera mänskligt om oraklet skriver ut sina svar en bokstav i taget.
-    Ta en titt på ELIZA, det första programmet av det här slaget.
-
-*/
 package main
 
 import (
@@ -41,6 +18,8 @@ const (
 	prompt = "> "
 )
 
+var answerMap = make(map[string]string)
+
 func main() {
 	fmt.Printf("Welcome to %s, the oracle at %s.\n", star, venue)
 	fmt.Println("Your questions will be answered in due time.")
@@ -50,9 +29,12 @@ func main() {
 	for {
 		fmt.Print(prompt)
 		line, _ := reader.ReadString('\n')
-		line = strings.TrimSpace(line)
+		line = strings.ToLower(strings.TrimSpace(line))
 		if line == "" {
 			continue
+		}
+		if line == "quit" { //exit from the program
+			break
 		}
 		fmt.Printf("%s heard: %s\n", star, line)
 		oracle <- line // The channel doesn't block.
@@ -66,6 +48,7 @@ func main() {
 func Oracle() chan<- string {
 	questions := make(chan string)
 	answers := make(chan string)
+	fillAnswers()
 	go answerBuffer(questions, answers)
 	go print(answers)
 	go prophecy("", answers)
@@ -73,26 +56,50 @@ func Oracle() chan<- string {
 }
 
 //This is the answer buffer function
+//It recives all the questions and creates a separate answer gorutine for all of them.
 func answerBuffer(questions <-chan string, answers chan string) {
 	for s := range questions {
 		go answer(s, answers)
 	}
 }
 
-//dummy func, fix it
+//Fills the map answerMap with answers
+func fillAnswers() {
+	answerMap["color"] = "The color you percive is not of importance.. "
+	answerMap["how"] = "How do people do anything?"
+	answerMap["god"] = "God is, even though the whole world deny him. Truth stands, even if there be no public support. It is self-sustained."
+	answerMap["hello"] = "Don't waste my time with "
+	answerMap["help"] = "I can't help you with that.."
+	answerMap["art"] = "Art for art’s sake makes no more sense than gin for gin’s sake"
+	answerMap["should"] = "The desires of our ego are often in conflict with the emotions of our heart.  You’ll always have what you want, if you want what you have"
+	answerMap["death"] = "We so easily lose perspective on what takes up our energy and focus.  We’re all dying.  Sometimes we need to remind ourselves of this to enjoy living."
+	answerMap["meaning"] = "42, the number 42 is the answer to The Ultimate Question of Life, the Universe, and Everything"
+}
+
+//This is the oracle's answer algorithm.
+//It waits for a while and then sends and answer on the answer channel
 func answer(question string, answers chan<- string) {
 	time.Sleep(time.Duration(1+rand.Intn(3)) * time.Second)
 	//todo fix the answering algorithm
-	words := strings.Fields(question)
+	s := make([]string, 2)
+	s[0] = "That's a silly question."
+	s[1] = "That's not even a question.. you are wasting my time."
 
-	answers <- words[rand.Intn(len(words))]
+	answer := s[rand.Intn(len(s))] // default answer
+	for i := range answerMap {
+		if strings.Contains(question, i) {
+			answer = answerMap[i]
+		}
+	}
+	answers <- answer
 
 }
 
-//This is the print function, it prints one character in a time to simulate a real person
+//This is the print function.
+//It prints the strings it recives on the answer channel one character at a time, "random time", to simulate a real person.
 func print(ch <-chan string) {
 	for s := range ch {
-		for _, s := range strings.Split(s, "") {
+		for _, s := range strings.Split(s, "") { //splits the strings by ""
 			time.Sleep(time.Duration(50+rand.Intn(150)) * time.Millisecond)
 			fmt.Print(s)
 		}
@@ -108,23 +115,16 @@ func prophecy(question string, answer chan<- string) {
 	// Keep them waiting. Pythia, the original oracle at Delphi,
 	// only gave prophecies on the seventh day of each month.
 	for {
-		time.Sleep(time.Duration(20+rand.Intn(10)) * time.Second)
-
-		// Find the longest word.
-		longestWord := ""
-		words := strings.Fields(question) // Fields extracts the words into a slice.
-		for _, w := range words {
-			if len(w) > len(longestWord) {
-				longestWord = w
-			}
-		}
-
-		// Cook up some pointless nonsense.
+		time.Sleep(time.Duration(30+rand.Intn(20)) * time.Second)
+		// Quotes from the Oracle in the Matrix
 		nonsense := []string{
-			"The moon is dark.",
-			"The sun is bright.",
+			"We are all here to do what we are all here to do...",
+			"It seems that every time we meet, I have nothing but bad news. I'm sorry about that, I surely am. But for what it's worth, you've made a believer out of me. Good luck, kiddo.",
+			"What do all men with power want? More power.",
+			"Everything that has a beginning has an end. I see the end coming, I see the darkness spreading. I see death.",
+			"I'll make the predictions around here.",
 		}
-		answer <- longestWord + "... " + nonsense[rand.Intn(len(nonsense))]
+		answer <- "... " + nonsense[rand.Intn(len(nonsense))]
 	}
 }
 
