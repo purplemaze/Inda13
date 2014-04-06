@@ -1,5 +1,5 @@
 // Stefan Nilsson 2013-03-13
-// Daniel Cserhalmi 2014-03-28
+// Daniel Cserhalmi 2014-04-01
 // This program implements an ELIZA-like oracle (en.wikipedia.org/wiki/ELIZA).
 package main
 
@@ -120,12 +120,13 @@ func fillAnswers() {
 	answerMap["color"] = "The color you percive is not of importance.. "
 	answerMap["how"] = "How do people do anything?"
 	answerMap["god"] = "God is, even though the whole world deny him. Truth stands, even if there be no public support. It is self-sustained."
-	answerMap["hello"] = "Don't waste my time with "
+	answerMap["hello"] = "Don't waste my time.. what do you want?"
 	answerMap["help"] = "I can't help you with that.."
 	answerMap["art"] = "Art for art’s sake makes no more sense than gin for gin’s sake"
 	answerMap["should"] = "The desires of our ego are often in conflict with the emotions of our heart.  You’ll always have what you want, if you want what you have"
 	answerMap["death"] = "We so easily lose perspective on what takes up our energy and focus.  We’re all dying.  Sometimes we need to remind ourselves of this to enjoy living."
 	answerMap["meaning"] = "42, the number 42 is the answer to The Ultimate Question of Life, the Universe, and Everything"
+	answerMap["you"] = "Me?.. I thought we were talking about you"
 }
 
 func init() { // Functions called "init" are executed before the main function.
