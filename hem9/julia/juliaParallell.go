@@ -1,11 +1,11 @@
 // Stefan Nilsson 2013-02-27
 // Daniel Cserhalmi 2014-04-08
 
-//Använd channels
 // This program creates pictures of Julia sets (en.wikipedia.org/wiki/Julia_set).
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -15,7 +15,6 @@ import (
 	"runtime"
 	"strconv"
 	"sync"
-	"fmt"
 	"time"
 )
 
@@ -46,7 +45,7 @@ func main() {
 	for n, fn := range Funcs {
 		err := CreatePng("picture-"+strconv.Itoa(n)+".png", fn, 1024) //1024 x 1024
 		if err != nil {
-				log.Fatal(err)
+			log.Fatal(err)
 		}
 	}
 	fmt.Println("time:", time.Now().Sub(before))
@@ -68,7 +67,7 @@ func CreatePng(filename string, f ComplexFunc, n int) (err error) {
 func Julia(f ComplexFunc, n int) image.Image {
 	wg := new(sync.WaitGroup)
 	bounds := image.Rect(-n/2, -n/2, n/2, n/2)
-	wg.Add(bounds.Max.X - bounds.Min.X)
+	wg.Add(bounds.Max.X - bounds.Min.X) //delar upp det på 1024 (512 - -(512) ) alltså en gorutin för varje "rad" i pixelarrayen/bilden
 	img := image.NewRGBA(bounds)
 	s := float64(n / 4)
 	for i := bounds.Min.X; i < bounds.Max.X; i++ {

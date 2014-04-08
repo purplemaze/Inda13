@@ -1,11 +1,11 @@
 // Stefan Nilsson 2013-02-27
 // Daniel Cserhalmi 2014-04-08
 
-//Använd channels
 // This program creates pictures of Julia sets (en.wikipedia.org/wiki/Julia_set).
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -14,7 +14,6 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-	"fmt"
 	"time"
 )
 
@@ -45,7 +44,7 @@ func main() {
 	for n, fn := range Funcs {
 		err := CreatePng("picture-"+strconv.Itoa(n)+".png", fn, 1024) //1024 x 1024
 		if err != nil {
-				log.Fatal(err)
+			log.Fatal(err)
 		}
 	}
 	fmt.Println("time:", time.Now().Sub(before))
