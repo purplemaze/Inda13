@@ -40,14 +40,19 @@ func init() {
 }
 
 func main() {
-
+	wg := new(sync.WaitGroup)
+	wg.Add(len(Funcs))
 	before := time.Now()
 	for n, fn := range Funcs {
-		err := CreatePng("picture-"+strconv.Itoa(n)+".png", fn, 1024) //1024 x 1024
-		if err != nil {
-			log.Fatal(err)
-		}
+		go func(n int, fn ComplexFunc) {
+			err := CreatePng("picture-"+strconv.Itoa(n)+".png", fn, 1024) //1024 x 1024
+			if err != nil {
+				log.Fatal(err)
+			}
+			wg.Done()
+		}(n, fn)
 	}
+	wg.Wait()
 	fmt.Println("time:", time.Now().Sub(before))
 }
 
@@ -88,6 +93,7 @@ func Julia(f ComplexFunc, n int) image.Image {
 
 // Iterate sets z_0 = z, and repeatedly computes z_n = f(z_{n-1}), n â‰¥ 1,
 // until |z_n| > 2  or n = max and returns this n.
+//Divide into several gorutines!
 func Iterate(f ComplexFunc, z complex128, max int) (n int) {
 	for ; n < max; n++ {
 		if real(z)*real(z)+imag(z)*imag(z) > 4 {

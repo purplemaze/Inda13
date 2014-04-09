@@ -3,5 +3,5 @@ Programmet använder 8 st på min dator.
 
 Hur mycket snabbare blir din parallella version?
 När jag körde orginal programmet julia.go tog det 34.36.. sekunder på min dator.
-Den parallella versionen juliaParallell.go tog 6.43.. sekunder på min dator, vilket innebär att den parallella versionen är ungefär 5,5 gånger snabbare
+Den parallella versionen juliaParallell.go tog 5.63.. sekunder på min dator, vilket innebär att den parallella versionen är ungefär 6,3 gånger snabbare
 
