@@ -1,3 +1,9 @@
+// Stefan Nilsson
+// Daniel Cserhalmi 2014-04-10
+//
+// This program litsens on 1 or 3 different servers(depending on the method you use) that
+// indicate the current (fake) temperature at KTH in Stockholm
+// and prints the answer time and temp.
 package main
 
 import (
