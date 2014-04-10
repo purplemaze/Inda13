@@ -57,18 +57,17 @@ func Get(url string) *Response {
 }
 
 // README.md contains solutions to prev. bugs.
-// Read makes an HTTP Get request to a specified url and returns 
+// Read makes an HTTP Get request to a specified url and returns
 // the response with status code 200 or 503 - service unavailable .
-// If the server doesn't answer before the timeout, the response is 
+// If the server doesn't answer before the timeout, the response is
 // 504 - Gateway timeout
 func Read(url string, timeout time.Duration) (res *Response) {
 	response := make(chan *Response, 1) // creates a buffered channel
 	go func() {
-		response <-Get(url)
-		
+		response <- Get(url)
 	}()
 	select {
-	case res = <-response: 
+	case res = <-response:
 	case <-time.After(timeout):
 		res = &Response{"Gateway timeout\n", 504}
 	}
@@ -83,12 +82,11 @@ func MultiRead(urls []string, timeout time.Duration) (res *Response) {
 	response := make(chan *Response, 3) // creates a buffered channel
 	for _, url := range urls {
 		go func(url string) {
-		response <-Get(url)
-		
+			response <- Get(url)
 		}(url)
 	}
 	select {
-	case res = <-response: 
+	case res = <-response:
 	case <-time.After(timeout):
 		res = &Response{"Service unavailable - \n", 503}
 	}
