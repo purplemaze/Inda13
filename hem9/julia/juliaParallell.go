@@ -44,7 +44,7 @@ func main() {
 	wg.Add(len(Funcs))
 	before := time.Now()
 	for n, fn := range Funcs {
-		go func(n int, fn ComplexFunc) {
+		go func(n int, fn ComplexFunc) { // one gorutine per picture
 			err := CreatePng("picture-"+strconv.Itoa(n)+".png", fn, 1024) //1024 x 1024
 			if err != nil {
 				log.Fatal(err)
@@ -72,11 +72,11 @@ func CreatePng(filename string, f ComplexFunc, n int) (err error) {
 func Julia(f ComplexFunc, n int) image.Image {
 	wg := new(sync.WaitGroup)
 	bounds := image.Rect(-n/2, -n/2, n/2, n/2)
-	wg.Add(bounds.Max.X - bounds.Min.X) //delar upp det på 1024 (512 - -(512) ) alltså en gorutin för varje "rad" i pixelarrayen/bilden
+	wg.Add(bounds.Max.X - bounds.Min.X)
 	img := image.NewRGBA(bounds)
 	s := float64(n / 4)
 	for i := bounds.Min.X; i < bounds.Max.X; i++ {
-		go func(i int) {
+		go func(i int) { //delar upp det på 1024 (512 - -(512) ) alltså en gorutin för varje "kolumn"/x-led i pixelarrayen/bilden
 			for j := bounds.Min.Y; j < bounds.Max.Y; j++ {
 				n := Iterate(f, complex(float64(i)/s, float64(j)/s), 256)
 				r := uint8(0)
@@ -92,14 +92,16 @@ func Julia(f ComplexFunc, n int) image.Image {
 }
 
 // Iterate sets z_0 = z, and repeatedly computes z_n = f(z_{n-1}), n â‰¥ 1,
-// until |z_n| > 2  or n = max and returns this n.
-//Divide into several gorutines!
+// until |z_n| > 2  or n = max and returns this n.!
 func Iterate(f ComplexFunc, z complex128, max int) (n int) {
+	//newMax := make([]int, max / 8)
 	for ; n < max; n++ {
+		//go func() {
 		if real(z)*real(z)+imag(z)*imag(z) > 4 {
 			break
 		}
 		z = f(z)
+		//}
 	}
 	return
 }
