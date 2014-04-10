@@ -1,4 +1,6 @@
 // http://www.nada.kth.se/~snilsson/concurrency/
+//Stefan Nilsson
+//Daniel Cserhalmi 2014-04-10
 package main
 
 import (
@@ -10,10 +12,10 @@ import (
 // receiving by any number of goroutines. It also shows how  the select
 // statement can be used to choose one out of several communications.
 func main() {
-	people := []string{"Anna", "Bob", "Cody", "Dave", "Eva",}
+	people := []string{"Anna", "Bob", "Cody", "Dave", "Eva"}
 	match := make(chan string, 1) // Make room for one unmatched send.
 	wg := new(sync.WaitGroup)
-	//var wg sync.WaitGroup = new(sync.WaitGroup)
+	//var wg sync.WaitGroup
 	wg.Add(len(people))
 	for _, name := range people {
 		go Seek(name, match, wg)
@@ -22,7 +24,7 @@ func main() {
 	select {
 	case name := <-match:
 		fmt.Printf("No one received %s’s message.\n", name)
-	//default:
+	default:
 		// There was no pending send operation.
 	}
 }
