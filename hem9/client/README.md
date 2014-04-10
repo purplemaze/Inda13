@@ -7,5 +7,5 @@ The first bug is a data race which occurs when both the gorutine and the "timeou
 The second bug occurs when "the timeout case" is executed before the gorutine is done. 
 The gorutine then blocks forever because "no one" is receiving. 
 This creates a memory leak and if the program runs long enough it will crash.
-Both bugs can be fixed by creating a new buffered channel
-Got inspired and helped by: https:vividcortex.com/blog/2014/01/15/two-go-memory-leaks/
+Both bugs can be fixed by creating a new buffered channel.
+I got inspired and helped by: https:vividcortex.com/blog/2014/01/15/two-go-memory-leaks/
